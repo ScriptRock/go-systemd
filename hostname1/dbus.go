@@ -74,26 +74,26 @@ func (c *Conn) initConnection() error {
 }
 
 // SetHostname asks hostnamed to set the hostname.
-func (c *Conn) SetHostname(name string, askForAuth bool) {
-	c.object.Call(dbusInterface+".SetHostname", 0, name, askForAuth)
+func (c *Conn) SetHostname(name string, askForAuth bool) error {
+	return c.object.Call(dbusInterface+".SetHostname", 0, name, askForAuth).Err
 }
 
 // SetStaticHostname asks hostnamed to set the static hostname.
-func (c *Conn) SetStaticHostname(name string, askForAuth bool) {
-	c.object.Call(dbusInterface+".SetStaticHostname", 0, name, askForAuth)
+func (c *Conn) SetStaticHostname(name string, askForAuth bool) error {
+	return c.object.Call(dbusInterface+".SetStaticHostname", 0, name, askForAuth).Err
 }
 
 // SetPrettyHostname asks hostnamed to set the pretty hostname.
-func (c *Conn) SetPrettyHostname(name string, askForAuth bool) {
-	c.object.Call(dbusInterface+".SetPrettyHostname", 0, name, askForAuth)
+func (c *Conn) SetPrettyHostname(name string, askForAuth bool) error {
+	return c.object.Call(dbusInterface+".SetPrettyHostname", 0, name, askForAuth).Err
 }
 
 // SetIconName asks hostnamed to set the icon name following the XDG icon naming spec.
-func (c *Conn) SetIconName(name string, askForAuth bool) {
-	c.object.Call(dbusInterface+".SetIconName", 0, name, askForAuth)
+func (c *Conn) SetIconName(name string, askForAuth bool) error {
+	return c.object.Call(dbusInterface+".SetIconName", 0, name, askForAuth).Err
 }
 
 // SetChassis asks hostnamed to set the chassis name.
-func (c *Conn) SetChassis(name string, askForAuth bool) {
-	c.object.Call(dbusInterface+".SetChassis", 0, name, askForAuth)
+func (c *Conn) SetChassis(name string, askForAuth bool) error {
+	return c.object.Call(dbusInterface+".SetChassis", 0, name, askForAuth).Err
 }
