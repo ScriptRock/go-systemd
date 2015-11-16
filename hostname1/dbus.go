@@ -16,6 +16,7 @@
 package hostname1
 
 import (
+	"fmt"
 	"os"
 	"strconv"
 
@@ -71,6 +72,64 @@ func (c *Conn) initConnection() error {
 	c.object = c.conn.Object("org.freedesktop.hostname1", dbus.ObjectPath(dbusPath))
 
 	return nil
+}
+
+// close the connection to the dbus socket
+func (c *Conn) Close() error {
+	return c.conn.Close()
+}
+
+// GetProperties returns all hostname related properties
+func (c *Conn) GetProperties() (map[string]interface{}, error) {
+	var err error
+	var props map[string]dbus.Variant
+
+	err = c.object.Call("org.freedesktop.DBus.Properties.GetAll", 0, dbusInterface).Store(&props)
+	if err != nil {
+		return nil, err
+	}
+
+	out := make(map[string]interface{}, len(props))
+	for k, v := range props {
+		out[k] = v.Value()
+	}
+
+	return out, nil
+}
+
+// GetProperty returns a single hostname property
+func (c *Conn) GetProperty(propertyName string) (interface{}, error) {
+	var err error
+	var prop dbus.Variant
+
+	err = c.object.Call("org.freedesktop.DBus.Properties.Get", 0, dbusInterface, propertyName).Store(&prop)
+	if err != nil {
+		return nil, err
+	}
+
+	return prop.Value(), nil
+}
+
+// find the dynamic hostname
+func (c *Conn) GetHostname() (string, error) {
+	if hn, err := c.GetProperty("Hostname"); err != nil {
+		return "", err
+	} else if hns, ok := hn.(string); !ok {
+		return "", fmt.Errorf("hostname has incorrect type: %T", hn)
+	} else {
+		return hns, nil
+	}
+}
+
+// find the static hostname
+func (c *Conn) GetStaticHostname() (string, error) {
+	if hn, err := c.GetProperty("StaticHostname"); err != nil {
+		return "", err
+	} else if hns, ok := hn.(string); !ok {
+		return "", fmt.Errorf("hostname has incorrect type: %T", hn)
+	} else {
+		return hns, nil
+	}
 }
 
 // SetHostname asks hostnamed to set the hostname.
