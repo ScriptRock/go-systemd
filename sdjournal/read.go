@@ -38,7 +38,9 @@ type JournalReaderConfig struct {
 	// the array is empty, entries will not be filtered.
 	Matches []Match
 
-	MaxEntryLength uint64 // the max allowable length for an entry (default is 64K)
+	// If not empty, the journal instance will point to a journal residing
+	// in this directory. The supplied path may be relative or absolute.
+	Path string
 }
 
 // JournalReader is an io.ReadCloser which provides a simple interface for iterating through the
@@ -50,11 +52,16 @@ type JournalReader struct {
 // NewJournalReader creates a new JournalReader with configuration options that are similar to the
 // systemd journalctl tool's iteration and filtering features.
 func NewJournalReader(config JournalReaderConfig) (*JournalReader, error) {
-	var err error
 	r := &JournalReader{}
 
 	// Open the journal
-	if r.journal, err = NewJournal(); err != nil {
+	var err error
+	if config.Path != "" {
+		r.journal, err = NewJournalFromDir(config.Path)
+	} else {
+		r.journal, err = NewJournal()
+	}
+	if err != nil {
 		return nil, err
 	}
 
@@ -128,10 +135,9 @@ func (r *JournalReader) Follow(until <-chan time.Time, writer io.Writer) (err er
 
 	// Process journal entries and events. Entries are flushed until the tail or
 	// timeout is reached, and then we wait for new events or the timeout.
+	var msg = make([]byte, 64*1<<(10))
 process:
 	for {
-		var msg = make([]byte, 64*1<<(10))
-
 		c, err := r.Read(msg)
 		if err != nil && err != io.EOF {
 			break process
@@ -142,7 +148,7 @@ process:
 			return ErrExpired
 		default:
 			if c > 0 {
-				writer.Write(msg)
+				writer.Write(msg[:c])
 				continue process
 			}
 		}
