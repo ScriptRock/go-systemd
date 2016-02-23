@@ -112,6 +112,12 @@ func NewSystemdConnection() (*Conn, error) {
 	})
 }
 
+// NewWrapConnection takes an existing DBus connection and wraps with a SystemD connection
+// Added by UpGuard
+func NewWrapConnection(f func() (*dbus.Conn, error)) (*Conn, error) {
+	return newConnection(f)
+}
+
 // Close closes an established connection
 func (c *Conn) Close() {
 	c.sysconn.Close()
