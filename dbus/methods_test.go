@@ -22,7 +22,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/godbus/dbus"
+	"github.com/ScriptRock/dbus"
 )
 
 func setupConn(t *testing.T) *Conn {

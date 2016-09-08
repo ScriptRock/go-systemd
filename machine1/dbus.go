@@ -21,7 +21,7 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/godbus/dbus"
+	"github.com/ScriptRock/dbus"
 )
 
 const (
