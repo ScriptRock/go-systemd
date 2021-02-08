@@ -15,7 +15,7 @@
 package dbus
 
 import (
-	"github.com/ScriptRock/dbus"
+	"github.com/cloudhousetech/dbus"
 )
 
 // From the systemd docs:

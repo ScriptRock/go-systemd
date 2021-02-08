@@ -18,7 +18,7 @@ import (
 	"errors"
 	"time"
 
-	"github.com/ScriptRock/dbus"
+	"github.com/cloudhousetech/dbus"
 )
 
 const (

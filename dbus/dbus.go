@@ -22,7 +22,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/ScriptRock/dbus"
+	"github.com/cloudhousetech/dbus"
 )
 
 const (

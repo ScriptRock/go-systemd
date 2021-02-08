@@ -19,7 +19,7 @@ import (
 	"path"
 	"strconv"
 
-	"github.com/ScriptRock/dbus"
+	"github.com/cloudhousetech/dbus"
 )
 
 func (c *Conn) jobComplete(signal *dbus.Signal) {
